@@ -8,16 +8,25 @@
 
 #include "credentials.h";
 #include "iot_config_home.h";
+
 #include "bedroom_light.h";
 
 // Pin map
-#define LED_P1_PIN D7 // Real
-//#define LED_P2_PIN D8
 //#define LED_P1_PIN D8 // test
+#define LED_P1_PIN D7
+#define LED_P2_PIN D8
+#define LED_P3_PIN D6
+#define LED_P5_PIN D2
+#define LED_P4_PIN D5 // Unused due to transistor colliding with holder
+
+#define W_PIN LED_P1_PIN
+#define R_PIN LED_P2_PIN
+#define G_PIN LED_P3_PIN
+#define B_PIN LED_P4_PIN
+
 
 #define PHOTORESISTOR_PIN A0
 #define PIR_PIN D1
-
 
 // MQTT
 #define MQTT_BROKER_ADDRESS IPAddress(192, 168, 1, 2)
@@ -26,11 +35,22 @@
 #define MQTT_QOS 1
 #define MQTT_RETAIN true
 
+// Timing
 #define ILLUMINANCE_PUBLISH_PERIOD 60000 // [ms] = 60 seconds
 #define ILLUMINANCE_MEASUREMENT_PERIOD 100 // [ms] = 0.1 seconds
+#define INCREMENT_PERIOD 2
 
 #define FILTER_CONSTANT 0.1
 
+// The PWM values when each channel is on
+// Maxes out at 1023
+#define PWM_MAX_DUTY 1023
+#define R_ON 1000
+#define G_ON 0
+#define B_ON 0
+#define W_ON 950
+
+// Low pass filter for Photoresistor
 class LowPassFilter {
   
   private:
@@ -49,6 +69,58 @@ class LowPassFilter {
     }
 };
 
+
+class LedChannel {
+  
+  private:
+    int pin;
+    int current_duty;
+    int target_duty;
+    long last_increment;
+    
+  public:
+
+    int duty_when_on;
+    
+    LedChannel(int pin, int duty_when_on) {
+      this->pin = pin;
+      this->duty_when_on = duty_when_on;
+
+      // Initialize variables
+      this->target_duty = 0;
+      this->current_duty = 0;
+      this->last_increment = -INCREMENT_PERIOD;
+    }
+
+    void init(){
+      pinMode(this->pin, OUTPUT);
+      analogWrite(this->pin, 0);
+    }
+    
+    void loop() {
+      long now = millis();
+      if(now - this->last_increment > INCREMENT_PERIOD) {
+        this->last_increment = now;
+        if(this->current_duty < PWM_MAX_DUTY && (this->target_duty - this->current_duty) > 0) {
+          this->current_duty += 1;
+          analogWrite(this->pin, this->current_duty);
+        }
+        if(this->current_duty > 0 && (this->target_duty - this->current_duty) < 0) {
+          this->current_duty -= 1;
+          analogWrite(this->pin, this->current_duty);
+        }
+      }
+    }
+
+    void turn_on(){
+      this->target_duty = this->duty_when_on;
+    }
+
+    void turn_off(){
+      this->target_duty = 0;
+    }
+};
+
 // Instanciate objects
 ESP8266WebServer web_server(80);
 WiFiClient wifi_client;
@@ -56,18 +128,23 @@ PubSubClient MQTT_client(wifi_client);
 
 LowPassFilter photoresistor_lpf(FILTER_CONSTANT);
 
-int led_target = 0;
-char* state = "ON";
+LedChannel R_channel(R_PIN, R_ON);
+LedChannel G_channel(G_PIN, G_ON);
+LedChannel B_channel(B_PIN, B_ON);
+LedChannel W_channel(W_PIN, W_ON);
+
+char* state = "OFF";
 
 
 void setup() {
+
+  //LED_init();
+  R_channel.init();
+  G_channel.init();
+  B_channel.init();
+  W_channel.init();
   
-  digitalWrite(LED_P1_PIN,LOW);
-  pinMode(LED_P1_PIN, OUTPUT);
   pinMode(PIR_PIN, INPUT);
-  
-  // Mandatory initial delay
-  delay(10);
 
   // Serial init
   Serial.begin(115200);
@@ -92,7 +169,12 @@ void loop() {
   web_server.handleClient();
   MQTT_client.loop();
 
-  handle_LED();
+  R_channel.loop();
+  G_channel.loop();
+  B_channel.loop();
+  W_channel.loop();
+
+  //handle_LED();
   //read_PIR();
   read_photoresistor();
   

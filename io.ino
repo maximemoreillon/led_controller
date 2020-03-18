@@ -1,33 +1,19 @@
-#define INCREMENT_PERIOD 2
-
-void handle_LED(){
-  static long last_increment = -INCREMENT_PERIOD;
-  static int led_duty = 0;
-
-  if(millis() - last_increment > INCREMENT_PERIOD) {
-    last_increment = millis();
-    if(led_duty < 1023 && (led_target - led_duty) > 0) {
-      led_duty += 1;
-      analogWrite(LED_P1_PIN, led_duty);
-    }
-    if(led_duty > 0 && (led_target - led_duty) < 0) {
-      led_duty -= 1;
-      analogWrite(LED_P1_PIN, led_duty);
-    }
-    
-  }
-}
-
 void turn_on(){
   Serial.println(F("[IO] Turning ON"));
-  led_target = 800;
+  R_channel.turn_on();
+  G_channel.turn_on();
+  B_channel.turn_on();
+  W_channel.turn_on();
   state = "ON";
   MQTT_publish_state();
 }
 
 void turn_off(){
   Serial.println(F("[IO] Turning OFF"));
-  led_target = 0;
+  R_channel.turn_off();
+  G_channel.turn_off();
+  B_channel.turn_off();
+  W_channel.turn_off();
   state = "OFF";
   MQTT_publish_state();
 }
