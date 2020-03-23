@@ -23,7 +23,8 @@ void wifi_connection_manager(){
     if(wifi_connected != 1){
       // Wifi connection status changed to "connected"
       wifi_connected = 1;
-      Serial.println(F("[WiFi] Connected"));
+      Serial.print(F("[WiFi] Connected: "));
+      Serial.println(WiFi.localIP());
     }
   }
   

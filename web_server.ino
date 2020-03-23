@@ -3,6 +3,7 @@ void web_server_setup() {
   Serial.println(F("[Web server] Web server initialization"));
   
   web_server.on("/", handle_root);
+  web_server.on("/color", handle_color);
   web_server.on("/update_form", handle_update_form);
   web_server.on("/update",HTTP_POST, handle_update, handle_update_upload);
   web_server.onNotFound(handle_not_found);
@@ -14,6 +15,22 @@ void handle_root() {
   web_server.sendHeader("Connection", "close");
   web_server.sendHeader("Access-Control-Allow-Origin", "*");
   web_server.send(200, "text/html", html);
+}
+
+void handle_color() {
+  
+  for (int i = 0; i < web_server.args(); i++) {
+
+    if(web_server.argName(i) == "r") R_channel.duty_when_on = web_server.arg(i).toInt();
+    if(web_server.argName(i) == "g") G_channel.duty_when_on = web_server.arg(i).toInt();
+    if(web_server.argName(i) == "b") B_channel.duty_when_on = web_server.arg(i).toInt();
+    if(web_server.argName(i) == "w") W_channel.duty_when_on = web_server.arg(i).toInt();
+  
+  }
+  
+  web_server.sendHeader("Connection", "close");
+  web_server.sendHeader("Access-Control-Allow-Origin", "*");
+  web_server.send(200, "text/html", "OK");
 }
 
 void handle_update_form(){

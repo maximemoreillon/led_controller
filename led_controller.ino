@@ -10,6 +10,8 @@
 #include "iot_config_home.h";
 
 #include "bedroom_light.h";
+//#include "entrance_light.h";
+//#include "test_light.h";
 
 // Pin map
 //#define LED_P1_PIN D8 // test
@@ -19,14 +21,17 @@
 #define LED_P5_PIN D2
 #define LED_P4_PIN D5 // Unused due to transistor colliding with holder
 
+#define PHOTORESISTOR_PIN A0
+#define PIR_PIN D1
+
+// Assignment of color channels to pins
 #define W_PIN LED_P1_PIN
 #define R_PIN LED_P2_PIN
 #define G_PIN LED_P3_PIN
 #define B_PIN LED_P4_PIN
 
 
-#define PHOTORESISTOR_PIN A0
-#define PIR_PIN D1
+
 
 // MQTT
 #define MQTT_BROKER_ADDRESS IPAddress(192, 168, 1, 2)
@@ -38,7 +43,7 @@
 // Timing
 #define ILLUMINANCE_PUBLISH_PERIOD 60000 // [ms] = 60 seconds
 #define ILLUMINANCE_MEASUREMENT_PERIOD 100 // [ms] = 0.1 seconds
-#define INCREMENT_PERIOD 2
+#define INCREMENT_PERIOD 2 // [ms]
 
 #define FILTER_CONSTANT 0.1
 
@@ -81,15 +86,19 @@ class LedChannel {
   public:
 
     int duty_when_on;
+    int duty_when_off;
+    boolean on;
     
     LedChannel(int pin, int duty_when_on) {
       this->pin = pin;
+      
       this->duty_when_on = duty_when_on;
+      this->duty_when_off = 0;
 
-      // Initialize variables
+      this->on = false;
       this->target_duty = 0;
       this->current_duty = 0;
-      this->last_increment = -INCREMENT_PERIOD;
+      this->last_increment = 0;
     }
 
     void init(){
@@ -98,14 +107,23 @@ class LedChannel {
     }
     
     void loop() {
+      
+      // Run periodically
       long now = millis();
       if(now - this->last_increment > INCREMENT_PERIOD) {
         this->last_increment = now;
-        if(this->current_duty < PWM_MAX_DUTY && (this->target_duty - this->current_duty) > 0) {
+
+        // Select target duty based on wether On of Off
+        if(this->on) this->target_duty = this->duty_when_on;
+        else this->target_duty = this->duty_when_off;
+        
+        int duty_delta = this->target_duty - this->current_duty;
+        
+        if(this->current_duty < PWM_MAX_DUTY && duty_delta > 0) {
           this->current_duty += 1;
           analogWrite(this->pin, this->current_duty);
         }
-        if(this->current_duty > 0 && (this->target_duty - this->current_duty) < 0) {
+        if(this->current_duty > 0 && duty_delta < 0) {
           this->current_duty -= 1;
           analogWrite(this->pin, this->current_duty);
         }
@@ -113,11 +131,11 @@ class LedChannel {
     }
 
     void turn_on(){
-      this->target_duty = this->duty_when_on;
+      this->on = true;
     }
 
     void turn_off(){
-      this->target_duty = 0;
+      this->on = false;
     }
 };
 
@@ -174,7 +192,6 @@ void loop() {
   B_channel.loop();
   W_channel.loop();
 
-  //handle_LED();
   //read_PIR();
   read_photoresistor();
   
