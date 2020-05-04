@@ -9,7 +9,10 @@
 #include "credentials.h";
 #include "iot_config_home.h";
 
-#include "bedroom_light.h";
+//#include "bedroom_light.h";
+//#include "living_light.h";
+#include "kitchen_light.h";
+
 //#include "entrance_light.h";
 //#include "test_light.h";
 
@@ -36,12 +39,11 @@
 // MQTT
 #define MQTT_BROKER_ADDRESS IPAddress(192, 168, 1, 2)
 #define MQTT_PORT 1883
-#define MQTT_LAST_WILL "{\"state\":\"disconnected\"}"
 #define MQTT_QOS 1
 #define MQTT_RETAIN true
 
 // Timing
-#define ILLUMINANCE_PUBLISH_PERIOD 60000 // [ms] = 60 seconds
+#define ILLUMINANCE_PUBLISH_PERIOD 10000 // [ms] = 10 seconds
 #define ILLUMINANCE_MEASUREMENT_PERIOD 100 // [ms] = 0.1 seconds
 #define INCREMENT_PERIOD 2 // [ms]
 
