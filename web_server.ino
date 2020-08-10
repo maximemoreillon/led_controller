@@ -2,8 +2,9 @@ void web_server_setup() {
 
   Serial.println(F("[Web server] Web server initialization"));
   
-  web_server.on("/", handle_root);
-  web_server.on("/color", handle_color);
+  web_server.on("/", HTTP_GET, handle_root);
+  web_server.on("/color_form", HTTP_GET, handle_color_form);
+  web_server.on("/color", HTTP_GET, handle_color_update);
   web_server.on("/update_form", handle_update_form);
   web_server.on("/update",HTTP_POST, handle_update, handle_update_upload);
   web_server.onNotFound(handle_not_found);
@@ -17,21 +18,52 @@ void handle_root() {
   web_server.send(200, "text/html", html);
 }
 
-void handle_color() {
-  
-  for (int i = 0; i < web_server.args(); i++) {
-
-    if(web_server.argName(i) == "r") R_channel.duty_when_on = web_server.arg(i).toInt();
-    if(web_server.argName(i) == "g") G_channel.duty_when_on = web_server.arg(i).toInt();
-    if(web_server.argName(i) == "b") B_channel.duty_when_on = web_server.arg(i).toInt();
-    if(web_server.argName(i) == "w") W_channel.duty_when_on = web_server.arg(i).toInt();
-  
-  }
-  
+void handle_color_form() {
+  String html = pre_main + color_form + post_main;
   web_server.sendHeader("Connection", "close");
   web_server.sendHeader("Access-Control-Allow-Origin", "*");
-  web_server.send(200, "text/html", "OK");
+  web_server.send(200, "text/html", html);
+  
+
 }
+
+void handle_color_update() {
+
+  // Go through query parameters
+  for (int i = 0; i < web_server.args(); i++) {
+    //if(web_server.argName(i) == "color") R_channel.duty_when_on = web_server.arg(i).toInt();
+
+    if(web_server.argName(i) == "color") {
+      String hexString = web_server.arg(i);
+      
+      long number = (long) strtol( &hexString[1], NULL, 16);
+      int r = number >> 16;
+      int g = number >> 8 & 0xFF;
+      int b = number & 0xFF;
+      
+      Serial.print("red is ");
+      Serial.println(map(r,0,255,0,PWM_MAX_DUTY));
+      Serial.print("green is ");
+      Serial.println(map(g,0,255,0,PWM_MAX_DUTY));
+      Serial.print("blue is ");
+      Serial.println(map(b,0,255,0,PWM_MAX_DUTY));
+      
+    }
+    else if(web_server.argName(i) == "w") {
+      W_channel.duty_when_on = web_server.arg(i).toInt();
+
+    }
+  }
+
+  String color_response = "<h2>Color selection</h2>"
+  "<p>OK</p>";
+  
+  String html = pre_main + color_response + post_main;
+  web_server.sendHeader("Connection", "close");
+  web_server.sendHeader("Access-Control-Allow-Origin", "*");
+  web_server.send(200, "text/html", html);
+}
+
 
 void handle_update_form(){
   String html = pre_main + update_form + post_main;

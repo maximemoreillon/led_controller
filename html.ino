@@ -1,34 +1,26 @@
 // Head partials
 // Style
 const String styles = "<style>"
-  ".status{"
-  "width: 35vmin;"
-  "height: 35vmin;"
-  "border-radius: 50%;"
-  "border: 10px solid #ce0000;"
-  "padding: 5px;"
-  "background: white;"
-  "background-clip: content-box;"
-  "transition: background-color 0.5s;"
-  "}"
+  "body{}"
+  "nav a:not(:last-child) {margin-right: 0.5em;}"
+  "footer {margin-top: 1em;}"
   "</style>";
 
 // Body partials
-const String header = "<div class='header'>"
-  + String(HOSTNAME) +
-  "</div>";
+const String header = "<header>"
+  "  <h1>LED controller</h1>"
+  "</header>";
 
-const String nav = "<div class='nav'>"
+const String nav = "<nav class='nav'>"
   "<a href='/'>Status</a>"
+  "<a href='/color_form'>Color selection</a>"
   "<a href='/update_form'>Firmware update</a>"
-  "</div>";
+  "</nav>";
   
-const String footer= "<div class='footer'>"
-  "  <div>"
-  "    <div>Scale firmware v2.0</div>"
-  "    <div>Maxime Moreillon</div>"
-  "  </div>"
-  "</div>";
+const String footer= "<footer>"
+  "  <div>LED controller firmware v0.5</div>"
+  "  <div>Maxime Moreillon</div>"
+  "</footer>";
 
 // Update form
 String update_form = "<h2>Firmware update</h2>"
@@ -42,24 +34,31 @@ String head ="<head>"
   "<title>" + String(HOSTNAME) +"</title>"
   + styles +
   "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-  "<link rel='stylesheet' type='text/css' href='http://maximemoreillon.com/web_components/master_css/master.css'>"
   "</head>";
 
 String pre_main = "<html>"
   + head + 
   "<body>"
-  "<div class='wrapper'>"
   + header + nav +
-  "<div class='main'>";
+  "<main>";
   
-String post_main = "</div>"
+String post_main = "</main>"
   + footer +
-  "</div>"
   "</body>"
   "</html>";
 
 // Root
-String root_main = "";
+String root_main = "<h2>Status</h2>"
+  "<p>Hostname: " + String(HOSTNAME) + "</p>";
+
+String color_form = "<h2>Color selection</h2>"
+  "<form action='/color' method='get'>"
+  "  <label>Color:</label>"
+  "  <input type='color' name='color' value='#ff0000'><br>"
+  "  <label>White</label>"
+  "  <input type='range' name='w' min='0' max='1023'><br>"
+  "  <input type='submit'>"
+  "</form>";
 
 // Not found
 String not_found = "<h2>Not found</h2>";

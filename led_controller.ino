@@ -11,10 +11,9 @@
 
 //#include "bedroom_light.h";
 //#include "living_light.h";
-#include "kitchen_light.h";
-
-//#include "entrance_light.h";
-//#include "test_light.h";
+//#include "kitchen_light.h";
+//#nclude "entrance_light.h";
+#include "test_light.h";
 
 // Pin map
 //#define LED_P1_PIN D8 // test
