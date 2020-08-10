@@ -3,6 +3,8 @@ void web_server_setup() {
   Serial.println(F("[Web server] Web server initialization"));
   
   web_server.on("/", HTTP_GET, handle_root);
+  web_server.on("/on", HTTP_GET, handle_turn_on);
+  web_server.on("/off", HTTP_GET, handle_turn_off);
   web_server.on("/color_form", HTTP_GET, handle_color_form);
   web_server.on("/color", HTTP_GET, handle_color_update);
   web_server.on("/update_form", handle_update_form);
@@ -40,13 +42,10 @@ void handle_color_update() {
       int r = number >> 16;
       int g = number >> 8 & 0xFF;
       int b = number & 0xFF;
-      
-      Serial.print("red is ");
-      Serial.println(map(r,0,255,0,PWM_MAX_DUTY));
-      Serial.print("green is ");
-      Serial.println(map(g,0,255,0,PWM_MAX_DUTY));
-      Serial.print("blue is ");
-      Serial.println(map(b,0,255,0,PWM_MAX_DUTY));
+
+      R_channel.duty_when_on = map(r,0,255,0,PWM_MAX_DUTY);
+      G_channel.duty_when_on = map(g,0,255,0,PWM_MAX_DUTY);
+      B_channel.duty_when_on = map(b,0,255,0,PWM_MAX_DUTY);
       
     }
     else if(web_server.argName(i) == "w") {
@@ -64,6 +63,27 @@ void handle_color_update() {
   web_server.send(200, "text/html", html);
 }
 
+void handle_turn_on(){
+  turn_on();
+  String response = "<h2>Turning on</h2>"
+  "<p>OK</p>";
+  String html = pre_main + response + post_main;
+
+  web_server.sendHeader("Connection", "close");
+  web_server.sendHeader("Access-Control-Allow-Origin", "*");
+  web_server.send(200, "text/html", html);
+}
+
+void handle_turn_off(){
+  turn_off();
+  String response = "<h2>Turning off</h2>"
+  "<p>OK</p>";
+  String html = pre_main + response + post_main;
+
+  web_server.sendHeader("Connection", "close");
+  web_server.sendHeader("Access-Control-Allow-Origin", "*");
+  web_server.send(200, "text/html", html);
+}
 
 void handle_update_form(){
   String html = pre_main + update_form + post_main;

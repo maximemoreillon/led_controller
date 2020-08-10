@@ -73,6 +73,14 @@ void read_photoresistor(){
   static long last_measurement_time;
   if( now - last_measurement_time > ILLUMINANCE_MEASUREMENT_PERIOD) {
     last_measurement_time = now;
+
+    // Do not measure light level if light is on
+    // i.e. only measure natural light
+    if(R_channel.current_duty > 0) return;
+    if(G_channel.current_duty > 0) return;
+    if(B_channel.current_duty > 0) return;
+    if(W_channel.current_duty > 0) return;
+    
     photoresistor_lpf.feed(analogRead(A0));
     
   }

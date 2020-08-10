@@ -49,7 +49,9 @@ String post_main = "</main>"
 
 // Root
 String root_main = "<h2>Status</h2>"
-  "<p>Hostname: " + String(HOSTNAME) + "</p>";
+  "<p>Hostname: " + String(HOSTNAME) + "</p>"
+  "<p><a href='/on'>Turn on</a></p>"
+  "<p><a href='/off'>Turn off</a></p>";
 
 String color_form = "<h2>Color selection</h2>"
   "<form action='/color' method='get'>"

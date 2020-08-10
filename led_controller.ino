@@ -11,9 +11,9 @@
 
 //#include "bedroom_light.h";
 //#include "living_light.h";
-//#include "kitchen_light.h";
+#include "kitchen_light.h";
 //#nclude "entrance_light.h";
-#include "test_light.h";
+//#include "test_light.h";
 
 // Pin map
 //#define LED_P1_PIN D8 // test
@@ -80,12 +80,12 @@ class LedChannel {
   
   private:
     int pin;
-    int current_duty;
     int target_duty;
     long last_increment;
     
   public:
 
+    int current_duty;
     int duty_when_on;
     int duty_when_off;
     boolean on;
@@ -109,12 +109,13 @@ class LedChannel {
     
     void loop() {
       
-      // Run periodically
+      // Run periodically every INCREMENT_PERIOD ms
       long now = millis();
       if(now - this->last_increment > INCREMENT_PERIOD) {
         this->last_increment = now;
 
         // Select target duty based on wether On of Off
+        // Off should be a shortcut to all 0
         if(this->on) this->target_duty = this->duty_when_on;
         else this->target_duty = this->duty_when_off;
         
