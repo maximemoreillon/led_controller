@@ -1,8 +1,3 @@
-char* last_will(){
-  // preparing last will
-  
-}
-
 void MQTT_setup(){
   Serial.println(F("[MQTT] MQTT setup"));
   
@@ -92,6 +87,12 @@ void MQTT_message_callback(char* topic, byte* payload, unsigned int length) {
   StaticJsonDocument<200> inbound_JSON_message;
   deserializeJson(inbound_JSON_message, payload);
 
+  // Check if state key is in the JSON payload
+  if(!inbound_JSON_message.containsKey("state")) {
+    Serial.println("[MQTT] payload does not contain state key");
+    return;
+  }
+
   // Extracting the command state from payload
   // Normally a const char* but copied using strdup so as to turn it into a char* for manipulation with strlwr
   char* command_state = strdup(inbound_JSON_message["state"]);
@@ -101,5 +102,6 @@ void MQTT_message_callback(char* topic, byte* payload, unsigned int length) {
   else if(strcmp(strlwr(command_state), "off") == 0) turn_off();
 
   // Free memory
+  // (Not sure if necessary)
   free(command_state);
 }

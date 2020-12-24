@@ -18,7 +18,7 @@ void turn_off(){
   MQTT_publish_state();
 }
 
-void toggle_relay(){
+void toggle_state(){
   Serial.println(F("[IO] Toggling state"));
   if(strcmp(state,"OFF") == 0){
     turn_on();
