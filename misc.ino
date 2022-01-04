@@ -9,6 +9,6 @@ String color_to_string(){
   char colorBuffer[24];
   snprintf(colorBuffer, sizeof(colorBuffer), "%02X%02X%02X", red, green, blue);
   
-  return String(colorBuffer);
+  return "#" + String(colorBuffer);
 
 }

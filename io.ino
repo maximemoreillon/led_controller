@@ -4,8 +4,9 @@ void turn_on(){
   G_channel.turn_on();
   B_channel.turn_on();
   W_channel.turn_on();
-  state = "ON";
-  MQTT_publish_state();
+  
+  iot_kernel.device_state = "on";
+  iot_kernel.mqtt_publish_state();
 }
 
 void turn_off(){
@@ -14,19 +15,21 @@ void turn_off(){
   G_channel.turn_off();
   B_channel.turn_off();
   W_channel.turn_off();
-  state = "OFF";
-  MQTT_publish_state();
+  
+  iot_kernel.device_state = "off";
+  iot_kernel.mqtt_publish_state();
 }
 
 void toggle_state(){
   Serial.println(F("[IO] Toggling state"));
-  if(strcmp(state,"OFF") == 0){
+  if(iot_kernel.device_state == "off"){
     turn_on();
   }
-  else if(strcmp(state,"ON") == 0){
+  else if(iot_kernel.device_state == "on"){
     turn_off();
   }
 }
+
 
 void read_PIR(){
   static long last_PIR_reading;
@@ -59,7 +62,7 @@ void read_PIR(){
 
     // Send the char array
     Serial.println(F("[MQTT] publish of motion detector state"));
-    MQTT_client.publish(MQTT_MOTION_STATUS_TOPIC, JSONmessageBuffer, MQTT_RETAIN);
+    iot_kernel.mqtt.publish(MQTT_MOTION_STATUS_TOPIC, JSONmessageBuffer, MQTT_RETAIN);
     
   }
 }
@@ -102,7 +105,7 @@ void read_photoresistor(){
     // Send the char array
     Serial.print(F("[MQTT] publish of illuminance measurement: "));
     Serial.println(photoresistor_lpf.output);
-    MQTT_client.publish(MQTT_ILLUMINANCE_TOPIC, JSONmessageBuffer, MQTT_RETAIN);
+    iot_kernel.mqtt.publish(MQTT_ILLUMINANCE_TOPIC, JSONmessageBuffer, MQTT_RETAIN);
     
   }
 }

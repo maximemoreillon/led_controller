@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Color selection</h1>
+    <form action="/color" method="POST">
+      <p>
+        <label>Color</label>
+        <input type="color" name="color" value="%COLOR%">
+      </p>
+      <p>
+        <label>White</label>
+        <input type="range" name="w" min="0" value="%W_DUTY%" max="%PWM_MAX_DUTY%">
+      </p>
+      <p>
+        <input type="submit">
+      </p>
+    </form>
+  </body>
+</html>
