@@ -7,21 +7,23 @@
  * 
  */
 
-#include "iotKernel.h"
+#include "IotKernel.h"
 
+//#include "hydroponics_light.h";
 //#include "living_light.h";
 //#include "kitchen_light.h";
-#include "bedroom_light.h";
+//#include "bedroom_light.h";
 
-#include "pin_mapping_v1_1.h"
-//#include "pin_mapping_v1_0.h"
+#include "pin_mapping_v1_0.h"
+//#include "pin_mapping_v1_1.h"
+
 
 
 #include "LedChannel.cpp" // A Custom made class to help with LED control
 #include "LowPassFilter.cpp" // A Custom made class to help with filtering
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.1.7"
+#define DEVICE_FIRMWARE_VERSION "0.2.1"
 
 
 #define PHOTORESISTOR_PIN A0
@@ -63,15 +65,11 @@ void setup() {
   W_channel.init();
 
   pinMode(PIR_PIN, INPUT);
+  analogWriteFreq(50000);
   
   iot_kernel.init();
-  iot_kernel.mqtt.setCallback(mqtt_message_callback);
-
-  // overwrite default topics
-  iot_kernel.mqtt_status_topic = MQTT_LIGHT_STATUS_TOPIC;
-  iot_kernel.mqtt_command_topic = MQTT_LIGHT_COMMAND_TOPIC;
-
-  web_server_setup();
+  mqtt_config();
+  web_server_config();
 }
 
 

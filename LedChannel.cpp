@@ -32,6 +32,7 @@ class LedChannel {
     void init(){
       pinMode(this->pin, OUTPUT);
       analogWrite(this->pin, 0);
+      
     }
 
     void loop() {

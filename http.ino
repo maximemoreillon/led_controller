@@ -5,7 +5,7 @@ String processor(const String& var) {
   return String();
 }
 
-void web_server_setup() {  
+void web_server_config() {  
   iot_kernel.http.on("/color", HTTP_GET, handle_color_form);
   iot_kernel.http.on("/color", HTTP_POST, handle_color_update);
 }

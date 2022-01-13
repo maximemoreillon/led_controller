@@ -20,7 +20,7 @@ void turn_off(){
   iot_kernel.mqtt_publish_state();
 }
 
-void toggle_state(){
+void toggle(){
   Serial.println(F("[IO] Toggling state"));
   if(iot_kernel.device_state == "off"){
     turn_on();
@@ -62,7 +62,8 @@ void read_PIR(){
 
     // Send the char array
     Serial.println(F("[MQTT] publish of motion detector state"));
-    iot_kernel.mqtt.publish(MQTT_MOTION_STATUS_TOPIC, JSONmessageBuffer, MQTT_RETAIN);
+    String topic = iot_kernel.mqtt_base_topic + "/motion";
+    iot_kernel.mqtt.publish(topic.c_str(), JSONmessageBuffer, MQTT_RETAIN);
     
   }
 }
@@ -105,7 +106,8 @@ void read_photoresistor(){
     // Send the char array
     Serial.print(F("[MQTT] publish of illuminance measurement: "));
     Serial.println(photoresistor_lpf.output);
-    iot_kernel.mqtt.publish(MQTT_ILLUMINANCE_TOPIC, JSONmessageBuffer, MQTT_RETAIN);
+    String topic = iot_kernel.mqtt_base_topic + "/illuminance";
+    iot_kernel.mqtt.publish(topic.c_str(), JSONmessageBuffer, MQTT_RETAIN);
     
   }
 }

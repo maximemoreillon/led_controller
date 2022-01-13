@@ -1,3 +1,11 @@
+void mqtt_config(){
+  iot_kernel.mqtt.setCallback(mqtt_message_callback);
+
+  // overwrite default topics
+//  iot_kernel.mqtt_status_topic = MQTT_LIGHT_STATUS_TOPIC;
+//  iot_kernel.mqtt_command_topic = MQTT_LIGHT_COMMAND_TOPIC;
+}
+
 void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_length) {
 
   Serial.print("[MQTT] message received on ");
@@ -22,6 +30,7 @@ void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_leng
 
     if( strcmp(strlwr(command), "on") == 0 ) turn_on();
     else if( strcmp(strlwr(command), "off") == 0 ) turn_off();
+    else if( strcmp(strlwr(command), "toggle") == 0 ) toggle();
 
     free(command);
 
