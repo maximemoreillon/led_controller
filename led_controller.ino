@@ -9,11 +9,6 @@
 
 #include "IotKernel.h"
 
-//#include "hydroponics_light.h";
-//#include "living_light.h";
-//#include "kitchen_light.h";
-//#include "bedroom_light.h";
-
 #include "pin_mapping_v1_0.h"
 //#include "pin_mapping_v1_1.h"
 
@@ -23,7 +18,7 @@
 #include "LowPassFilter.cpp" // A Custom made class to help with filtering
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.2.1"
+#define DEVICE_FIRMWARE_VERSION "0.2.2"
 
 
 #define PHOTORESISTOR_PIN A0

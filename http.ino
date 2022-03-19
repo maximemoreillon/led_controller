@@ -8,6 +8,7 @@ String processor(const String& var) {
 void web_server_config() {  
   iot_kernel.http.on("/color", HTTP_GET, handle_color_form);
   iot_kernel.http.on("/color", HTTP_POST, handle_color_update);
+  iot_kernel.http.on("/toggle", HTTP_POST, handle_toggle);
 }
 
 void handle_color_form(AsyncWebServerRequest *request) {
@@ -32,6 +33,11 @@ void handle_color_update(AsyncWebServerRequest *request) {
 
   request->redirect("/color");
   
+}
 
+void handle_toggle(AsyncWebServerRequest *request) {
 
+  toggle();
+  request->send(200, "text/html", "OK");
+  
 }
