@@ -13,9 +13,13 @@ button {
   font-size: 10vmin;
   padding: 3vmin;
   border: 1vmin solid #eeeeee;
-  border-radius: 10%;
+  border-radius: 2vmin;
   color: #eeeeee;
   background-color: inherit;
+}
+
+button:hover {
+  background-color: #666666;
 }
 
 button:active {
