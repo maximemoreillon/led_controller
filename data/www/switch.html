@@ -10,7 +10,7 @@
     <button
       type="button"
       id="button">
-      Toggle
+      TOGGLE
     </button>
 
 
@@ -18,12 +18,13 @@
 
       const button = document.getElementById('button')
       button.addEventListener('click', () => {
-        const url = `/toggle`
-        const options = {method: 'POST'}
-        fetch(url,options)
+        fetch(`/toggle`, { method: 'POST' })
         .then(() => {
         })
-        .catch( error => { console.log(error)})
+        .catch( error => {
+          console.log(error)
+          alert(error)
+        })
 
       })
 

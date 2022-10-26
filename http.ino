@@ -36,7 +36,7 @@ void handle_color_update(AsyncWebServerRequest *request) {
 }
 
 void handle_toggle(AsyncWebServerRequest *request) {
-
+  Serial.println(F("[HTTP] Toggling command received"));
   toggle();
   request->send(200, "text/html", "OK");
   

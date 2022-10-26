@@ -9,6 +9,11 @@
   <body>
     <h1>%DEVICE_NAME%</h1>
 
+    <nav>
+      <a href="/switch.html">Toggle</a>
+      <a href="/color.html">Color</a>
+    </nav>
+
     <form class="" action="/settings" method="post">
 
       <h2>Device</h2>
@@ -90,6 +95,15 @@
               name="mqtt_broker_port"
               value="%MQTT_BROKER_PORT%"
               placeholder='MQTT broker port'>
+          </td>
+        </tr>
+        <tr>
+          <th>SSL</th>
+          <td>
+            <select name="mqtt_broker_secure" id="mqtt_secure_select">
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
           </td>
         </tr>
         <tr>

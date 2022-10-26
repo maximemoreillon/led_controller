@@ -9,16 +9,14 @@
 
 #include "IotKernel.h"
 
-#include "pin_mapping_v1_0.h"
-//#include "pin_mapping_v1_1.h"
-
-
+//#include "pin_mapping_v1_0.h"
+#include "pin_mapping_v1_1.h"
 
 #include "LedChannel.cpp" // A Custom made class to help with LED control
 #include "LowPassFilter.cpp" // A Custom made class to help with filtering
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.2.2"
+#define DEVICE_FIRMWARE_VERSION "0.2.3"
 
 
 #define PHOTORESISTOR_PIN A0
