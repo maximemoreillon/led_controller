@@ -40,8 +40,14 @@
 #define B_ON 0
 #define W_ON 950
 
-IotKernel iot_kernel(DEVICE_TYPE,DEVICE_FIRMWARE_VERSION); 
+struct ColorConfig {
+  int w;
+  int r;
+  int g;
+  int b;
+};
 
+IotKernel iot_kernel(DEVICE_TYPE,DEVICE_FIRMWARE_VERSION); 
 LowPassFilter photoresistor_lpf(FILTER_CONSTANT);
 
 LedChannel R_channel(R_PIN, R_ON);
@@ -49,20 +55,22 @@ LedChannel G_channel(G_PIN, G_ON);
 LedChannel B_channel(B_PIN, B_ON);
 LedChannel W_channel(W_PIN, W_ON);
 
+ColorConfig colorConfig;
+
 
 void setup() {
-  //LED_init();
-  R_channel.init();
-  G_channel.init();
-  B_channel.init();
-  W_channel.init();
 
-  pinMode(PIR_PIN, INPUT);
-  analogWriteFreq(50000);
-  
+  led_init();
   iot_kernel.init();
+
   mqtt_config();
   web_server_config();
+
+  get_color_config_from_spiffs();
+  apply_color_config();
+
+  
+
 }
 
 
@@ -73,6 +81,6 @@ void loop() {
   G_channel.loop();
   B_channel.loop();
   W_channel.loop();
-  read_PIR();
+  read_motion_sensor();
   read_photoresistor();
 }

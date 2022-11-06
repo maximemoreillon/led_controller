@@ -2,19 +2,44 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>%DEVICE_NAME%</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <link rel="stylesheet" href="styles.css"> 
   </head>
   <body>
-    <h1>Color selection</h1>
+    <h1>%DEVICE_NAME%</h1>
+    <nav>
+      <a href="/">Settings</a>
+      <a href="/switch.html">Toggle</a>
+    </nav>
+    <h2>Color</h2>
     <form action="/color" method="POST">
-      <p>
-        <label>Color</label>
-        <input type="color" name="color" value="%COLOR%">
-      </p>
-      <p>
-        <label>White</label>
-        <input type="range" name="w" min="0" value="%W_DUTY%" max="%PWM_MAX_DUTY%">
-      </p>
+      <table>
+        <tr>
+          <th>White</th>
+          <td>
+            <input type="range" name="w" min="0" value="%WHITE%" max="255">
+          </td>
+        </tr>
+        <tr>
+          <th>Red</th>
+          <td>
+            <input type="range" name="r" min="0" value="%RED%" max="255">
+          </td>
+        </tr>
+        <tr>
+          <th>Green</th>
+          <td>
+            <input type="range" name="g" min="0" value="%GREEN%" max="255">
+          </td>
+        </tr>
+        <tr>
+          <th>Blue</th>
+          <td>
+            <input type="range" name="b" min="0" value="%BLUE%" max="255">
+          </td>
+        </tr>
+      </table>
       <p>
         <input type="submit">
       </p>
