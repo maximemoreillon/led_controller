@@ -15,8 +15,8 @@ void web_server_config() {
   iot_kernel.http.on("/color", HTTP_POST, handle_color_update);
   
   iot_kernel.http.on("/toggle", HTTP_POST, handle_toggle);
-//  iot_kernel.http.on("/turn_on", HTTP_POST, handle_toggle);
-//  iot_kernel.http.on("/turn_off", HTTP_POST, handle_toggle);
+  iot_kernel.http.on("/turn_on", HTTP_POST, handle_turn_on);
+  iot_kernel.http.on("/turn_off", HTTP_POST, handle_turn_off);
 }
 
 void handle_color_form(AsyncWebServerRequest *request) {
@@ -37,19 +37,6 @@ void handle_color_update(AsyncWebServerRequest *request) {
   apply_color_config();
 
   write_color_config_to_spiffs();
-//
-//
-//  String hexString = request->arg("color");
-//  
-//  long number = (long) strtol( &hexString[1], NULL, 16);
-//  
-//  int r = number >> 16;
-//  int g = number >> 8 & 0xFF;
-//  int b = number & 0xFF;
-//
-//  R_channel.duty_when_on = map(r,0,255,0,PWM_MAX_DUTY);
-//  G_channel.duty_when_on = map(g,0,255,0,PWM_MAX_DUTY);
-//  B_channel.duty_when_on = map(b,0,255,0,PWM_MAX_DUTY);
 
 
   request->redirect("/color");
@@ -60,5 +47,16 @@ void handle_toggle(AsyncWebServerRequest *request) {
   Serial.println(F("[HTTP] Toggling command received"));
   toggle();
   request->send(200, "text/html", "OK");
-  
+}
+
+void handle_turn_on(AsyncWebServerRequest *request) {
+  Serial.println(F("[HTTP] Turn on command received"));
+  turn_on();
+  request->send(200, "text/html", "OK");
+}
+
+void handle_turn_off(AsyncWebServerRequest *request) {
+  Serial.println(F("[HTTP] Turn off command received"));
+  turn_off();
+  request->send(200, "text/html", "OK");
 }
