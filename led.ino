@@ -10,6 +10,13 @@ void led_init(){
 
 }
 
+void led_handle(){
+  R_channel.loop();
+  G_channel.loop();
+  B_channel.loop();
+  W_channel.loop();
+}
+
 void turn_on(){
   Serial.println(F("[LED] Turning ON"));
   R_channel.turn_on();
@@ -47,17 +54,4 @@ void apply_color_config(){
   R_channel.duty_when_on = map(colorConfig.r,0,255,0,PWM_MAX_DUTY);
   G_channel.duty_when_on = map(colorConfig.g,0,255,0,PWM_MAX_DUTY);
   B_channel.duty_when_on = map(colorConfig.b,0,255,0,PWM_MAX_DUTY);
-}
-
-
-void print_color_config(){
-  Serial.print("W=");
-  Serial.print(colorConfig.w);
-  Serial.print("\tR=");
-  Serial.print(colorConfig.r);
-  Serial.print("\tG=");
-  Serial.print(colorConfig.g);
-  Serial.print("\tB=");
-  Serial.print(colorConfig.b);
-  Serial.println("");
 }

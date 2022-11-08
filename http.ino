@@ -32,11 +32,9 @@ void handle_color_update(AsyncWebServerRequest *request) {
   colorConfig.b = request->arg("b").toInt();
 
   Serial.println("[Color] Read color config from HTTP request");
-  print_color_config();
-
   apply_color_config();
 
-  write_color_config_to_spiffs();
+  colorConfig.writeToSpiffs();
 
 
   request->redirect("/color");

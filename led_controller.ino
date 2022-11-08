@@ -12,11 +12,12 @@
 //#include "pin_mapping_v1_0.h"
 #include "pin_mapping_v1_1.h"
 
-#include "LedChannel.cpp" // A Custom made class to help with LED control
-#include "LowPassFilter.cpp" // A Custom made class to help with filtering
+#include "LedChannel.cpp" // A custom made class to help with LED control
+#include "LowPassFilter.cpp" // A custom made class to help with filtering
+#include "ColorConfig.cpp" // A custom made class to help with color configuration
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.2.3"
+#define DEVICE_FIRMWARE_VERSION "0.2.4"
 
 
 #define PHOTORESISTOR_PIN A0
@@ -40,22 +41,16 @@
 #define B_ON 0
 #define W_ON 950
 
-struct ColorConfig {
-  int w;
-  int r;
-  int g;
-  int b;
-};
+
 
 IotKernel iot_kernel(DEVICE_TYPE,DEVICE_FIRMWARE_VERSION); 
 LowPassFilter photoresistor_lpf(FILTER_CONSTANT);
+ColorConfig colorConfig;
 
 LedChannel R_channel(R_PIN, R_ON);
 LedChannel G_channel(G_PIN, G_ON);
 LedChannel B_channel(B_PIN, B_ON);
 LedChannel W_channel(W_PIN, W_ON);
-
-ColorConfig colorConfig;
 
 
 void setup() {
@@ -66,7 +61,7 @@ void setup() {
   mqtt_config();
   web_server_config();
 
-  get_color_config_from_spiffs();
+  colorConfig.loadFromSpiffs();
   apply_color_config();
 
   
@@ -77,10 +72,7 @@ void setup() {
 
 void loop() {
   iot_kernel.loop();
-  R_channel.loop();
-  G_channel.loop();
-  B_channel.loop();
-  W_channel.loop();
+  led_handle();
   read_motion_sensor();
   read_photoresistor();
 }
