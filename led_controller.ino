@@ -35,22 +35,14 @@
 #define ILLUMINANCE_MEASUREMENT_PERIOD 100 // [ms] = 0.1 seconds
 #define FILTER_CONSTANT 0.1
 
-// The PWM values when each channel is on
-#define R_ON 0
-#define G_ON 0
-#define B_ON 0
-#define W_ON 950
-
-
-
 IotKernel iot_kernel(DEVICE_TYPE,DEVICE_FIRMWARE_VERSION); 
 LowPassFilter photoresistor_lpf(FILTER_CONSTANT);
 ColorConfig colorConfig;
 
-LedChannel R_channel(R_PIN, R_ON);
-LedChannel G_channel(G_PIN, G_ON);
-LedChannel B_channel(B_PIN, B_ON);
-LedChannel W_channel(W_PIN, W_ON);
+LedChannel R_channel(R_PIN);
+LedChannel G_channel(G_PIN);
+LedChannel B_channel(B_PIN);
+LedChannel W_channel(W_PIN);
 
 
 void setup() {

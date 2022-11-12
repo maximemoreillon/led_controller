@@ -7,26 +7,19 @@ class LedChannel {
 
   private:
     int pin;
-    int target_duty;
-    long last_increment;
+    int target_duty = 0;
+    long last_increment = 0;
 
   public:
 
-    int current_duty;
+    int current_duty = 0;
     int duty_when_on;
-    int duty_when_off;
-    boolean on;
+    int duty_when_off = 0;
+    boolean on = false;
 
-    LedChannel(int pin, int duty_when_on) {
+    LedChannel(int pin, int duty_when_on = 1024) {
       this->pin = pin;
-
       this->duty_when_on = duty_when_on;
-      this->duty_when_off = 0;
-
-      this->on = false;
-      this->target_duty = 0;
-      this->current_duty = 0;
-      this->last_increment = 0;
     }
 
     void init(){

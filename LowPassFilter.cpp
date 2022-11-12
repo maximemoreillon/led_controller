@@ -2,11 +2,11 @@
 
 class LowPassFilter {
   
-  private:
-    float filter_constant;
+//  private:
     
   public:
     float output;
+    float filter_constant; // if set to 1, no filtering
     
     LowPassFilter(float filter_constant) {
       this->output = 0;
