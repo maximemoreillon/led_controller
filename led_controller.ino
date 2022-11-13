@@ -12,8 +12,8 @@
 //#include "pin_mapping_v1_0.h"
 #include "pin_mapping_v1_1.h"
 
-#include "LedChannel.cpp" // A custom made class to help with LED control
 #include "LowPassFilter.cpp" // A custom made class to help with filtering
+#include "LedChannel.cpp" // A custom made class to help with LED control
 #include "ColorConfig.cpp" // A custom made class to help with color configuration
 
 #define DEVICE_TYPE "light"
@@ -33,10 +33,10 @@
 // Timing
 #define ILLUMINANCE_PUBLISH_PERIOD 60000 // [ms] = 60 seconds
 #define ILLUMINANCE_MEASUREMENT_PERIOD 100 // [ms] = 0.1 seconds
-#define FILTER_CONSTANT 0.1
+#define PHOTORESISTOR_FILTER_CONSTANT 0.1
 
 IotKernel iot_kernel(DEVICE_TYPE,DEVICE_FIRMWARE_VERSION); 
-LowPassFilter photoresistor_lpf(FILTER_CONSTANT);
+LowPassFilter photoresistor_lpf(PHOTORESISTOR_FILTER_CONSTANT);
 ColorConfig colorConfig;
 
 LedChannel R_channel(R_PIN);

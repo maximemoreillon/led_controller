@@ -11,15 +11,13 @@ class LedChannel {
     long last_increment = 0;
 
   public:
-
     int current_duty = 0;
-    int duty_when_on;
+    int duty_when_on = PWM_MAX_DUTY;
     int duty_when_off = 0;
     boolean on = false;
 
-    LedChannel(int pin, int duty_when_on = 1024) {
+    LedChannel(int pin) {
       this->pin = pin;
-      this->duty_when_on = duty_when_on;
     }
 
     void init(){
