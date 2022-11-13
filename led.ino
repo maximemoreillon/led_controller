@@ -12,9 +12,9 @@ void led_init(){
 
 void led_handle(){
   R_channel.loop();
-//  G_channel.loop();
-//  B_channel.loop();
-//  W_channel.loop();
+  G_channel.loop();
+  B_channel.loop();
+  W_channel.loop();
 }
 
 void turn_on(){
