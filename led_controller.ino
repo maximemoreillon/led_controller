@@ -9,8 +9,9 @@
 
 #include "IotKernel.h"
 
-//#include "pin_mapping_v1_0.h"
-#include "pin_mapping_v1_1.h"
+
+#include "pin_mapping_v1_0.h" // Kitchen, Living
+//#include "pin_mapping_v1_1.h" // Rest
 
 #include "LowPassFilter.cpp" // A custom made class to help with filtering
 #include "LedChannel.cpp" // A custom made class to help with LED control
