@@ -10,7 +10,7 @@
 #include "IotKernel.h"
 
 
-#include "pin_mapping_v1_0.h" // Kitchen, Living
+#include "pin_mapping_v1_0.h" // Kitchen, Living, Toilet, Bathroom 
 //#include "pin_mapping_v1_1.h" // Rest
 
 #include "LowPassFilter.cpp" // A custom made class to help with filtering
@@ -18,7 +18,7 @@
 #include "ColorConfig.cpp" // A custom made class to help with color configuration
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.2.4"
+#define DEVICE_FIRMWARE_VERSION "0.3.1"
 
 
 #define PHOTORESISTOR_PIN A0
@@ -45,17 +45,21 @@ LedChannel G_channel(G_PIN);
 LedChannel B_channel(B_PIN);
 LedChannel W_channel(W_PIN);
 
+String rgbCommandTopic;
+
 
 void setup() {
 
   led_init();
   iot_kernel.init();
 
-  mqtt_config();
+  
   web_server_config();
-
+  mqtt_config();
   colorConfig.loadFromSpiffs();
   apply_color_config();
+
+
 
   
 
@@ -65,6 +69,7 @@ void setup() {
 
 void loop() {
   iot_kernel.loop();
+  mqttSubscribe();
   led_handle();
   read_motion_sensor();
   read_photoresistor();
