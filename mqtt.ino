@@ -62,7 +62,7 @@ void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_leng
 
   else if(inbound_JSON_message.containsKey("state")){
 
-    Serial.println("[MQTTT] Payload is JSON with state");
+    Serial.println("[MQTT] Payload is JSON with state field");
 
     // Check what the command is and act accordingly
     char* command = strdup(inbound_JSON_message["state"]);
@@ -70,19 +70,16 @@ void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_leng
     if( strcmp(strlwr(command), "on") == 0 ) turn_on();
     else if( strcmp(strlwr(command), "off") == 0 ) turn_off();
     else if( strcmp(strlwr(command), "toggle") == 0 ) toggle();
-
+    else Serial.println("[MQTT] Payload is unknown");
+    
     free(command);
-
-
   }
   else {
-    Serial.println("[MQTTT] Payload is NOT JSON with state");
-    if(strncmp((char*) payload, "on", payload_length) == 0){
-      turn_on();
-    }
-    else if(strncmp((char*) payload, "off", payload_length) == 0){
-      turn_off();
-    }
+    Serial.println("[MQTT] Payload is NOT JSON with state field");
+    if(strncmp(strlwr((char*) payload), "on", payload_length) == 0) turn_on();
+    else if(strncmp(strlwr((char*) payload), "off", payload_length) == 0) turn_off();
+    else if(strcmp(strlwr((char*) payload), "toggle") == 0, payload_length) toggle();
+    else Serial.println("[MQTT] Payload is unknown");
   }
 
 }

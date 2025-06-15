@@ -1,4 +1,4 @@
-// Pin map
+// Used by newer boards
 #define LED_P1_PIN D7
 #define LED_P2_PIN D2
 #define LED_P3_PIN D5

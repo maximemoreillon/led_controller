@@ -41,12 +41,8 @@ void turn_off(){
 
 void toggle(){
   Serial.println(F("[LED] Toggling state"));
-  if(iot_kernel.device_state == "off"){
-    turn_on();
-  }
-  else if(iot_kernel.device_state == "on"){
-    turn_off();
-  }
+  if(iot_kernel.device_state == "off")turn_on();
+  else if(iot_kernel.device_state == "on")turn_off();
 }
 
 void apply_color_config(){
