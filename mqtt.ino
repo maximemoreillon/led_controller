@@ -44,15 +44,15 @@ void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_leng
       && inbound_JSON_message["g"]
       && inbound_JSON_message["b"] ) {
 
-      colorConfig.w = inbound_JSON_message["w"];
-      colorConfig.r = inbound_JSON_message["r"];
-      colorConfig.g = inbound_JSON_message["g"];
-      colorConfig.b = inbound_JSON_message["b"];
+      ledSettings.w = inbound_JSON_message["w"];
+      ledSettings.r = inbound_JSON_message["r"];
+      ledSettings.g = inbound_JSON_message["g"];
+      ledSettings.b = inbound_JSON_message["b"];
     
       Serial.println("[Color] Read color config from MQTT payload");
       apply_color_config();
     
-      colorConfig.writeToSpiffs();
+      ledSettings.writeToSpiffs();
   
       publishRgbw();
         
@@ -89,10 +89,10 @@ void publishRgbw(){
   // Prerpare a JSON message
     StaticJsonDocument<200> outbound_JSON_message;
 
-    outbound_JSON_message["w"] = colorConfig.w;
-    outbound_JSON_message["r"] = colorConfig.r;
-    outbound_JSON_message["g"] = colorConfig.g;
-    outbound_JSON_message["b"] = colorConfig.b;
+    outbound_JSON_message["w"] = ledSettings.w;
+    outbound_JSON_message["r"] = ledSettings.r;
+    outbound_JSON_message["g"] = ledSettings.g;
+    outbound_JSON_message["b"] = ledSettings.b;
     
 
 

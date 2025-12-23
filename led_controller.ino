@@ -15,10 +15,10 @@
 
 #include "LowPassFilter.cpp" // A custom made class to help with filtering
 #include "LedChannel.cpp" // A custom made class to help with LED control
-#include "ColorConfig.cpp" // A custom made class to help with color configuration
+#include "LedSettings.cpp" // A custom made class to help with color configuration
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.4.3"
+#define DEVICE_FIRMWARE_VERSION "0.5.0"
 
 
 #define PHOTORESISTOR_PIN A0
@@ -38,7 +38,7 @@
 
 IotKernel iot_kernel(DEVICE_TYPE,DEVICE_FIRMWARE_VERSION); 
 LowPassFilter photoresistor_lpf(PHOTORESISTOR_FILTER_CONSTANT);
-ColorConfig colorConfig;
+LedSettings ledSettings;
 
 LedChannel R_channel(R_PIN);
 LedChannel G_channel(G_PIN);
@@ -50,19 +50,25 @@ String rgbCommandTopic;
 
 void setup() {
 
-  led_init();
-  iot_kernel.init();
+  if(!Serial) Serial.begin(115200);
+  Serial.printf("\n\nIoT light v%s initializing...\n",DEVICE_FIRMWARE_VERSION);
+  if (!LittleFS.begin()) Serial.println("[SPIFFS] Failed to mount file system");
+  else Serial.println("[SPIFFS] File system mounted");
+  
 
+  led_init();
+  ledSettings.loadFromSpiffs();
+  apply_color_config();
+  if(ledSettings.defaultState) {
+    Serial.println("[LED] defaultState is true so turning ON");
+    turn_on();
+  }
+  else Serial.println("[LED] defaultState is false so keeping LED OFF");
+  
+  iot_kernel.init();
   
   web_server_config();
   mqtt_config();
-  colorConfig.loadFromSpiffs();
-  apply_color_config();
-
-
-
-  
-
 }
 
 

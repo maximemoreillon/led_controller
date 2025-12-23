@@ -2,33 +2,35 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
-class ColorConfig {
+class LedSettings {
 
 //  private:
 
   public:
 
+    bool defaultState;
+    
     int w;
     int r;
     int g;
     int b;
 
-    ColorConfig() {
+    LedSettings() {
  
     }
 
     void loadFromSpiffs(){
       StaticJsonDocument<1024> doc;
 
-      File configFile = LittleFS.open("/color.json", "r");
+      File configFile = LittleFS.open("/ledSettings.json", "r");
       if (!configFile) {
-        Serial.println("[SPIFFS] Failed to open config file");
+        Serial.println("[SPIFFS] Failed to open color config file");
         return;
       }
     
       size_t size = configFile.size();
       if (size > 1024) {
-        Serial.println("[SPIFFS] Config file size is too large");
+        Serial.println("[SPIFFS] Color config file size is too large");
         return;
       }
     
@@ -40,7 +42,7 @@ class ColorConfig {
     
       auto error = deserializeJson(doc, buf.get());
       if (error) {
-        Serial.println("[SPIFFS] Failed to parse config file");
+        Serial.println("[SPIFFS] Failed to parse settings file");
         return;
       }
     
@@ -49,8 +51,10 @@ class ColorConfig {
       this->r = doc["r"].as<int>();
       this->g = doc["g"].as<int>();
       this->b = doc["b"].as<int>();
+
+      this->defaultState = doc["defaultState"];
     
-      Serial.println("[Color] Read color config from spiffs");
+      Serial.println("[Color] Read settings from SPIFFS");
     }
 
     void writeToSpiffs(){
@@ -60,16 +64,18 @@ class ColorConfig {
       doc["r"] = this->r;
       doc["g"] = this->g;
       doc["b"] = this->b;
+      doc["defaultState"] = this->defaultState;
     
     
-      File configFile = LittleFS.open("/color.json", "w");
+      File configFile = LittleFS.open("/ledSettings.json", "w");
       if (!configFile) {
-        Serial.println("[LittleFS] Failed to open config file for writing");
+        Serial.println("[LittleFS] Failed to settings file for writing");
         return;
       }
     
       serializeJson(doc, configFile);
-      Serial.println("[SPIFFS] Finished writing color config file");
+      serializeJsonPretty(doc, Serial);
+      Serial.println("[SPIFFS] Finished writing settings file");
     }
 
 };

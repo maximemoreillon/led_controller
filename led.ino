@@ -46,8 +46,8 @@ void toggle(){
 }
 
 void apply_color_config(){
-  W_channel.duty_when_on = map(colorConfig.w,0,255,0,PWM_MAX_DUTY);
-  R_channel.duty_when_on = map(colorConfig.r,0,255,0,PWM_MAX_DUTY);
-  G_channel.duty_when_on = map(colorConfig.g,0,255,0,PWM_MAX_DUTY);
-  B_channel.duty_when_on = map(colorConfig.b,0,255,0,PWM_MAX_DUTY);
+  W_channel.duty_when_on = map(ledSettings.w,0,255,0,PWM_MAX_DUTY);
+  R_channel.duty_when_on = map(ledSettings.r,0,255,0,PWM_MAX_DUTY);
+  G_channel.duty_when_on = map(ledSettings.g,0,255,0,PWM_MAX_DUTY);
+  B_channel.duty_when_on = map(ledSettings.b,0,255,0,PWM_MAX_DUTY);
 }

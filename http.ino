@@ -1,43 +1,52 @@
 String processor(const String& var) {
 
   if(var == "DEVICE_NAME") return String(iot_kernel.device_name); 
-  else if(var == "WHITE") return String(colorConfig.w);
-  else if(var == "RED") return String(colorConfig.r);
-  else if(var == "GREEN") return String(colorConfig.g);
-  else if(var == "BLUE") return String(colorConfig.b);
+  else if(var == "WHITE") return String(ledSettings.w);
+  else if(var == "RED") return String(ledSettings.r);
+  else if(var == "GREEN") return String(ledSettings.g);
+  else if(var == "BLUE") return String(ledSettings.b);
+  else if(var == "BLUE") return String(ledSettings.b);
+  else if(var == "DEFAULT_STATE") {
+    if(ledSettings.defaultState) return "checked";
+    else return "";
+  }
   
   return String();
   
 }
 
 void web_server_config() {  
-  iot_kernel.http.on("/color", HTTP_GET, handle_color_form);
-  iot_kernel.http.on("/color", HTTP_POST, handle_color_update);
-  
+
+  iot_kernel.http.on("/led-settings", HTTP_GET, handle_led_settings_form);
+  iot_kernel.http.on("/led-settings", HTTP_POST, handle_led_settings_update);
+
   iot_kernel.http.on("/toggle", HTTP_POST, handle_toggle);
   iot_kernel.http.on("/turn_on", HTTP_POST, handle_turn_on);
   iot_kernel.http.on("/turn_off", HTTP_POST, handle_turn_off);
 }
 
-void handle_color_form(AsyncWebServerRequest *request) {
-  request->send(LittleFS, "/www/color.html", String(), false, processor);
+void handle_led_settings_form(AsyncWebServerRequest *request) {
+  request->send(LittleFS, "/www/led-settings.html", String(), false, processor);
 }
 
 
-void handle_color_update(AsyncWebServerRequest *request) {
+void handle_led_settings_update(AsyncWebServerRequest *request) {
 
-  colorConfig.w = request->arg("w").toInt();
-  colorConfig.r = request->arg("r").toInt();
-  colorConfig.g = request->arg("g").toInt();
-  colorConfig.b = request->arg("b").toInt();
+  ledSettings.w = request->arg("w").toInt();
+  ledSettings.r = request->arg("r").toInt();
+  ledSettings.g = request->arg("g").toInt();
+  ledSettings.b = request->arg("b").toInt();
 
-  Serial.println("[Color] Read color config from HTTP request");
+  ledSettings.defaultState = request->arg("defaultState") == "on";
+
+
+  Serial.println("[LED Settings] Read settings from HTTP request");
   apply_color_config();
 
-  colorConfig.writeToSpiffs();
+  ledSettings.writeToSpiffs();
 
 
-  request->redirect("/color");
+  request->redirect("/led-settings");
   
 }
 
