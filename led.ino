@@ -51,3 +51,11 @@ void apply_color_config(){
   G_channel.duty_when_on = map(ledSettings.g,0,255,0,PWM_MAX_DUTY);
   B_channel.duty_when_on = map(ledSettings.b,0,255,0,PWM_MAX_DUTY);
 }
+
+void turn_on_immediatly(){
+  Serial.println(F("[LED] Turning ON immediatly"));
+  R_channel.turn_on_immediatly();
+  G_channel.turn_on_immediatly();
+  B_channel.turn_on_immediatly();
+  W_channel.turn_on_immediatly();
+}

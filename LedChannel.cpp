@@ -58,4 +58,10 @@ class LedChannel {
     void turn_off(){
       this->on = false;
     }
+
+    void turn_on_immediatly(){
+      this->on = true;
+      this->current_duty = PWM_MAX_DUTY;
+      analogWrite(this->pin, this->current_duty);
+    }
 };

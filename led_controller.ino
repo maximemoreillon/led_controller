@@ -10,15 +10,15 @@
 #include "IotKernel.h"
 
 
-//#include "pin_mapping_v1_0.h" // Kitchen, Living
-#include "pin_mapping_v1_1.h" // Rest
+#include "pin_mapping_v1_0.h" // Kitchen, Living
+//#include "pin_mapping_v1_1.h" // Rest
 
 #include "LowPassFilter.cpp" // A custom made class to help with filtering
 #include "LedChannel.cpp" // A custom made class to help with LED control
 #include "LedSettings.cpp" // A custom made class to help with color configuration
 
 #define DEVICE_TYPE "light"
-#define DEVICE_FIRMWARE_VERSION "0.5.0"
+#define DEVICE_FIRMWARE_VERSION "0.5.1"
 
 
 #define PHOTORESISTOR_PIN A0
@@ -61,7 +61,7 @@ void setup() {
   apply_color_config();
   if(ledSettings.defaultState) {
     Serial.println("[LED] defaultState is true so turning ON");
-    turn_on();
+    turn_on_immediatly();
   }
   else Serial.println("[LED] defaultState is false so keeping LED OFF");
   
