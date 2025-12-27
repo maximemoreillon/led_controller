@@ -74,7 +74,6 @@ class LedSettings {
       }
     
       serializeJson(doc, configFile);
-      serializeJsonPretty(doc, Serial);
       Serial.println("[SPIFFS] Finished writing settings file");
     }
 

@@ -8,19 +8,7 @@ void mqtt_config(){
 //  iot_kernel.mqtt_command_topic = MQTT_LIGHT_COMMAND_TOPIC;
 }
 
-void mqttSubscribe(){
-  static boolean last_connection_state = false;
-  if(iot_kernel.mqtt.connected() != last_connection_state) {
-    last_connection_state = iot_kernel.mqtt.connected();
-    if(iot_kernel.mqtt.connected()) {
-      Serial.print("[MQTT] Subscribing to RGBW topic ");
-      Serial.println(rgbCommandTopic);
-      iot_kernel.mqtt.subscribe(rgbCommandTopic.c_str());
-      publishRgbw();
-    }
-  }
 
-}
 
 void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_length) {
 
@@ -82,6 +70,35 @@ void mqtt_message_callback(char* topic, byte* payload, unsigned int payload_leng
     else Serial.println("[MQTT] Payload is unknown");
   }
 
+}
+
+
+void mqttExtraLoop(){
+  static boolean last_connection_state = false;
+  if(iot_kernel.mqtt.connected() != last_connection_state) {
+    last_connection_state = iot_kernel.mqtt.connected();
+    
+    if(iot_kernel.mqtt.connected()) {
+      
+      if(ledSettings.defaultState) {
+        Serial.println("[MQTT] defaultState is true so overwriting retained messaged");
+        overWriteRetainedMessageWithStateOn();
+        
+      }
+//      Serial.print("[MQTT] Subscribing to RGBW topic ");
+//      Serial.println(rgbCommandTopic);
+//      iot_kernel.mqtt.subscribe(rgbCommandTopic.c_str());
+//      publishRgbw();
+    }
+  }
+}
+
+void overWriteRetainedMessageWithStateOn(){
+  StaticJsonDocument<200> outbound_JSON_message;
+  outbound_JSON_message["state"] = "on";
+  char JSONmessageBuffer[100];
+  serializeJson(outbound_JSON_message, JSONmessageBuffer, sizeof(JSONmessageBuffer));
+  iot_kernel.mqtt.publish(iot_kernel.mqtt_command_topic.c_str(), JSONmessageBuffer, MQTT_RETAIN);
 }
 
 
