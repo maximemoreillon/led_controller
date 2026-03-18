@@ -64,6 +64,7 @@ class LedSettings {
       doc["r"] = this->r;
       doc["g"] = this->g;
       doc["b"] = this->b;
+      
       doc["defaultState"] = this->defaultState;
     
     

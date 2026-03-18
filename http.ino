@@ -5,7 +5,6 @@ String processor(const String& var) {
   else if(var == "RED") return String(ledSettings.r);
   else if(var == "GREEN") return String(ledSettings.g);
   else if(var == "BLUE") return String(ledSettings.b);
-  else if(var == "BLUE") return String(ledSettings.b);
   else if(var == "DEFAULT_STATE") {
     if(ledSettings.defaultState) return "checked";
     else return "";
